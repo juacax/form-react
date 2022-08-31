@@ -63,12 +63,11 @@ h2 {
   font-size: 16px;
   margin: 10px 10px 10px 0px;
 }
-
 .form-control,
 input:focus {
   outline: none;
 }
-.form-react button {
+.form-react .modal-btn {
   background: #f2317f;
   border: 1px solid #f2317f;
   border-radius: 2px;
@@ -78,6 +77,20 @@ input:focus {
   padding: 10px;
   font-size: 18px;
   cursor: pointer;
+}
+.form-react .modal-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: black;
+}
+.form-react .modal-items {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: rgb(91, 89, 89);
 }
 .form-react button:hover {
   background-color: #bf1650;
