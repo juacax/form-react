@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import { validatedAge } from "./Validate";
+import Modal from "./Modal";
+import { useModal } from "../hooks/useModal";
 
 const Form = () => {
   const {
@@ -8,14 +10,16 @@ const Form = () => {
     watch,
     handleSubmit,
     reset,
+    getValues,
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
     reset();
   };
 
   const includePhone = watch("includePhone");
+
+  const [isOpenModal, openModal, closeModal] = useModal(false);
 
   return (
     <>
@@ -26,6 +30,7 @@ const Form = () => {
           <input
             type="text"
             placeholder="Facundo Guardia"
+            autoComplete="off"
             {...register("name", { required: true })}
           />
           {errors.name?.type === "required" && <p className="fail">Required</p>}
@@ -36,6 +41,7 @@ const Form = () => {
           <input
             type="text"
             placeholder="example@email.com"
+            autoComplete="off"
             {...register("email", {
               required: true,
               pattern:
@@ -92,11 +98,29 @@ const Form = () => {
         {includePhone && (
           <div className="form-control">
             <label>Phone</label>
-            <input type="text" placeholder="+549 11 545336" {...register("phono")} />
+            <input
+              type="text"
+              placeholder="+549 11 545336"
+              autoComplete="off"
+              {...register("phono")}
+            />
           </div>
         )}
 
-        <button type="submit">Send</button>
+        <button
+        className="modal-btn"
+        type="submit"
+        onClick={openModal }>
+          Send
+        </button>
+        <Modal
+        isOpen={isOpenModal}
+        closeModal={closeModal}>
+          <h2 className="modal-title">Form Data</h2>
+          <div className="modal-items">
+          <p>{JSON.stringify(getValues())}</p>
+          </div>
+        </Modal>
       </form>
     </>
   );
