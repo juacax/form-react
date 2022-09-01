@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { validatedAge } from "./Validate";
 import Modal from "./Modal";
 import { useModal } from "../hooks/useModal";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const Form = () => {
   const {
@@ -10,7 +12,6 @@ const Form = () => {
     watch,
     handleSubmit,
     reset,
-    getValues,
   } = useForm();
 
   const onSubmit = (data) => {
@@ -21,6 +22,12 @@ const Form = () => {
 
   const [isOpenModal, openModal, closeModal] = useModal(false);
 
+  const [email, setEmail] = useState("");
+
+  const cambiarEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
   return (
     <>
       <h2>Form React</h2>
@@ -29,8 +36,9 @@ const Form = () => {
           <label>Name</label>
           <input
             type="text"
-            placeholder="Facundo Guardia"
+            placeholder="Enter your name"
             autoComplete="off"
+            name="name"
             {...register("name", { required: true })}
           />
           {errors.name?.type === "required" && <p className="fail">Required</p>}
@@ -40,12 +48,12 @@ const Form = () => {
           <label>Email</label>
           <input
             type="text"
-            placeholder="example@email.com"
+            onChange={cambiarEmail}
+            placeholder="Enter your email"
             autoComplete="off"
             {...register("email", {
               required: true,
-              pattern:
-                /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i,
+              pattern: /^[^@]+@[^@]+\.[a-zA-Z]{2,}$/,
             })}
           />
           {errors.email?.type === "required" && (
@@ -60,7 +68,7 @@ const Form = () => {
           <label>Password</label>
           <input
             type="password"
-            placeholder="********"
+            placeholder="Enter your password"
             {...register("password", { required: true, maxLength: 8 })}
           />
         </div>
@@ -75,7 +83,7 @@ const Form = () => {
           <label>Age</label>
           <input
             type="number"
-            placeholder="18"
+            placeholder="Enter your age"
             {...register("age", { validate: validatedAge })}
           />
           {errors.age && <p className="fail">you are underage</p>}
@@ -86,7 +94,7 @@ const Form = () => {
           <textarea
             cols="55"
             rows="10"
-            placeholder="Some Text"
+            placeholder="Enter your message"
             {...register("message")}
           ></textarea>
         </div>
@@ -100,25 +108,19 @@ const Form = () => {
             <label>Phone</label>
             <input
               type="text"
-              placeholder="+549 11 545336"
+              placeholder="Enter your phone"
               autoComplete="off"
-              {...register("phono")}
+              {...register("phone")}
             />
           </div>
         )}
 
-        <button
-        className="modal-btn"
-        type="submit"
-        onClick={openModal }>
+        <button className="modal-btn" type="submit" onClick={openModal}>
           Send
         </button>
-        <Modal
-        isOpen={isOpenModal}
-        closeModal={closeModal}>
+        <Modal isOpen={isOpenModal} closeModal={closeModal}>
           <h2 className="modal-title">Form Data</h2>
           <div className="modal-items">
-          <p>{JSON.stringify(getValues())}</p>
           </div>
         </Modal>
       </form>
