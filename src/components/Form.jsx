@@ -2,31 +2,23 @@ import { useForm } from "react-hook-form";
 import { validatedAge } from "./Validate";
 import Modal from "./Modal";
 import { useModal } from "../hooks/useModal";
-import { useEffect } from "react";
-import { useState } from "react";
 
 const Form = () => {
+  const [isOpenModal, openModal, closeModal] = useModal(false);
   const {
     register,
     formState: { errors },
     watch,
     handleSubmit,
     reset,
+    getValues,
   } = useForm();
 
-  const onSubmit = (data) => {
-    reset();
+  const onSubmit = () => {
+    openModal();
   };
 
   const includePhone = watch("includePhone");
-
-  const [isOpenModal, openModal, closeModal] = useModal(false);
-
-  const [email, setEmail] = useState("");
-
-  const cambiarEmail = (e) => {
-    setEmail(e.target.value);
-  }
 
   return (
     <>
@@ -48,7 +40,6 @@ const Form = () => {
           <label>Email</label>
           <input
             type="text"
-            onChange={cambiarEmail}
             placeholder="Enter your email"
             autoComplete="off"
             {...register("email", {
@@ -78,7 +69,6 @@ const Form = () => {
         {errors.password?.type === "maxLength" && (
           <p className="fail">The password is a maximum of 8 characters</p>
         )}
-
         <div className="form-control">
           <label>Age</label>
           <input
@@ -88,7 +78,6 @@ const Form = () => {
           />
           {errors.age && <p className="fail">you are underage</p>}
         </div>
-
         <div className="form-control">
           <label>Message</label>
           <textarea
@@ -98,7 +87,6 @@ const Form = () => {
             {...register("message")}
           ></textarea>
         </div>
-
         <div className="form-control-cheackbox">
           <label>¿Include Phone?</label>
           <input type="checkbox" {...register("includePhone")} />
@@ -114,13 +102,12 @@ const Form = () => {
             />
           </div>
         )}
-
-        <button className="modal-btn" type="submit" onClick={openModal}>
+        <button className="modal-btn" type="submit">
           Send
         </button>
-        <Modal isOpen={isOpenModal} closeModal={closeModal}>
-          <h2 className="modal-title">Form Data</h2>
+        <Modal isOpen={isOpenModal} closeModal={closeModal} reset={reset}>
           <div className="modal-items">
+            {JSON.stringify(getValues(), null, "\t")}
           </div>
         </Modal>
       </form>

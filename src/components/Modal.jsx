@@ -1,17 +1,31 @@
+import { useCallback } from "react";
 import Styles from "./Modal.module.css";
 
-const Modal = ({children, isOpen, closeModal}) => {
-
-  const handleModal = (e) => e.stopPropagation();
+const Modal = ({ children, isOpen, closeModal, reset }) => {
+  const handleOnClose = useCallback(() => {
+    reset();
+    closeModal();
+  }, [reset, closeModal]);
 
   return (
-    <article className={`${Styles.modal} ${isOpen && Styles.isOpen}`} onClick={closeModal}>
-      <div className={Styles.modalContainer} onClick={handleModal}>
-        <button className={Styles.modalClose} onClick={closeModal}>X</button>
-        {children}
-      </div>
-    </article>
-  )
-}
+    <>
+      {isOpen ? (
+        <>
+          <div
+            className={`${Styles.modal} ${Styles.isOpen}`}
+            onClick={handleOnClose}
+          ></div>
+          <div className={Styles.modalContainer}>
+            <button className={Styles.modalClose} onClick={handleOnClose}>
+              X
+            </button>
+            <h2 className="modal-title">Form Data</h2>
+            {children}
+          </div>
+        </>
+      ) : null}
+    </>
+  );
+};
 
 export default Modal;
